@@ -158,14 +158,23 @@ app.post('/chat', async (req, res) => {
     console.log("[AI] Using model:", model);
 
     const response = await axios.post(
-      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-      { contents: memory.messages }
-    );
-
-    console.log("[AI] Raw response received");
-
-    const reply =
-      response.data.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+    {
+      contents: memory.messages,
+  
+      generationConfig: {
+        thinkingConfig: {
+          thinkingBudget: 0
+        }
+      }
+    }
+  );
+  
+  console.log("[AI] Raw response received");
+  
+  const parts = response.data.candidates?.[0]?.content?.parts || [];
+  
+  const reply = parts.filter(part => !part.thought).map(part => part.text).join("\n").trim() || "No response";
 
     console.log("[AI] Reply:", reply);
 
