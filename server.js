@@ -3,7 +3,7 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 
-const model = "gemma-4-26b-a4b-it";
+const model = "gemini-3.1-flash-lite";
 
 const app = express();
 const port = process.env.PORT || 3000;
